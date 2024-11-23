@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import { useState, useEffect } from 'react';
 import chefData from './MOCK_DATA.json';
 
