@@ -17,7 +17,7 @@ export default function Auth() {
         // User is already logged in, redirect to profile page
         router.push("/thank-you");
       }
-    }, []);
+    }, [router]);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
