@@ -9,6 +9,7 @@ import RegistrationForm from "../../../components/RegistrationForm";
 export default function Auth() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
+  const [bookingId, setBookingId] = useState(null); // Ensure bookingId is initialized
 
     // Check for existing user session on component mount
     useEffect(() => {
