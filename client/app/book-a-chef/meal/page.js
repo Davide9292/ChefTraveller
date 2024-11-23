@@ -6,9 +6,9 @@ import { useState } from 'react';
 export default function Meal() {
   const [meal, setMeal] = useState('');
 
-  const handleMealChange = (event) => {
-    setMeal(event.target.value);
-  };
+  // const handleMealChange = (event) => {
+  //   setMeal(event.target.value);
+  // };
 
   const handleSubmit = (event) => {
     event.preventDefault();

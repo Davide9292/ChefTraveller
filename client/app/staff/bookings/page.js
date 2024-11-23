@@ -99,15 +99,15 @@ export default function StaffBookings() {
   }
 
 
-  const handleChefSelection = (bookingId, chefId, isChecked) => {
-    setSelectedChefs((prevSelectedChefs) => ({
-      ...prevSelectedChefs,
-      [bookingId]: {
-        ...prevSelectedChefs[bookingId],
-        [chefId]: isChecked,
-      },
-    }));
-  };
+  // const handleChefSelection = (bookingId, chefId, isChecked) => {
+  //   setSelectedChefs((prevSelectedChefs) => ({
+  //     ...prevSelectedChefs,
+  //     [bookingId]: {
+  //       ...prevSelectedChefs[bookingId],
+  //       [chefId]: isChecked,
+  //     },
+  //   }));
+  // };
 
   const handlePriceChange = (bookingId, chefId, price) => {
     setChefPrices((prevChefPrices) => ({
@@ -119,9 +119,9 @@ export default function StaffBookings() {
     }));
   };
 
-  const handleFilterChange = (event) => {
-    setAvailableOnly(event.target.checked);
-  };
+  // const handleFilterChange = (event) => {
+  //   setAvailableOnly(event.target.checked);
+  // };
 
 
   const handleChefDropdownToggle = (bookingId, chefIndex) => {

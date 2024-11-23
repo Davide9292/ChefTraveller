@@ -6,9 +6,9 @@ import { useState } from 'react';
 export default function BookChef() {
   const [eventDuration, setEventDuration] = useState('');
 
-  const handleDurationChange = (event) => {
-    setEventDuration(event.target.value);
-  };
+  // const handleDurationChange = (event) => {
+  //   setEventDuration(event.target.value);
+  // };
 
   const handleSubmit = (event) => {
     event.preventDefault();
