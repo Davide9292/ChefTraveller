@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { use } from 'react';
 import styles from './ChefProfile.module.css';
 import chefData from '../MOCK_DATA.json'; // Adjust the path if needed
+import Image from 'next/image'; // Import the Image component
+
 
 export default function ChefProfile({ params }) {
     const [chef, setChef] = useState(null);
