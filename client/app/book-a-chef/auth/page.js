@@ -1,5 +1,5 @@
 // client/app/book-a-chef/auth/page.js
-"use client";
+"use server";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
