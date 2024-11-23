@@ -17,7 +17,10 @@ export default function Auth() {
         // User is already logged in, redirect to profile page
         router.push("/thank-you");
       }
-    }, [router]);
+    // Safely access localStorage
+    const storedBookingId = localStorage.getItem('bookingId');
+    setBookingId(storedBookingId);
+  }, [router]);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
