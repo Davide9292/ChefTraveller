@@ -1,5 +1,8 @@
 /* client/app/globals.css */
 /* ... other styles ... */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .user-icon {
     position: relative; /* To position the tooltip */
