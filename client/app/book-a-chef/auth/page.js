@@ -1,7 +1,7 @@
 // client/app/book-a-chef/auth/page.js
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Ensure useEffect is imported
 import { useRouter } from "next/navigation";
 import LoginForm from "../../../components/LoginForm";
 import RegistrationForm from "../../../components/RegistrationForm";
@@ -17,7 +17,7 @@ export default function Auth() {
         // User is already logged in, redirect to profile page
         router.push("/thank-you");
       }
-    }, [router]);
+    }, []);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
