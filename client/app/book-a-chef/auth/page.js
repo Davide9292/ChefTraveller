@@ -120,9 +120,9 @@ export default function Auth() {
       <h2>Book a Chef</h2>
       <h3>Step 8: Authentication</h3>
       {isLogin ? (
-        <LoginForm onAuthComplete={handleAuthComplete} bookingId={localStorage.getItem('bookingId')} /> // Pass bookingId as a prop
+        <LoginForm onAuthComplete={handleAuthComplete} bookingId={bookingId} />
       ) : (
-        <RegistrationForm onAuthComplete={handleAuthComplete} bookingId={localStorage.getItem('bookingId')} /> // Pass bookingId as a prop
+        <RegistrationForm onAuthComplete={handleAuthComplete} bookingId={bookingId} />
       )}
       <button type="button" onClick={toggleForm}>
         {isLogin ? "Need to register?" : "Already have an account?"}
