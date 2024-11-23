@@ -107,6 +107,6 @@ export default function Checkout({ params }) {
 }
 
 // Helper function to calculate the total price
-function calculateTotalPrice(booking, chef) {
+//function calculateTotalPrice(booking, chef) {
   // ... calculate total price based on booking and chef details ...
-}
+//}

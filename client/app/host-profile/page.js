@@ -84,7 +84,7 @@ export default function HostProfile() {
             <p>Status:{" "}{booking.proposal ? "Choose your chef" : "Waiting for chef proposals"}</p>
             {booking.proposal && (
               <div>
-                <h4>Chef's Proposal</h4>
+                <h4>Chef&aposs Proposal</h4>
                 <ul>
                   {booking.proposal.chefs.map((proposedChef, index) => {
                     const chef = proposedChef.chef;

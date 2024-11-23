@@ -87,7 +87,7 @@ export default function StaffBookings() {
     };
   
     fetchBookings(); // Call fetchBookings to initiate the process
-  }, []);
+  }, [availableOnly]);
 
   function isChefAvailableForBooking(bookingStart, bookingEnd, chefAvailability) {
     // Check if the chef has any availability entries that cover the entire booking period
@@ -254,7 +254,7 @@ export default function StaffBookings() {
 
         {/* Conditionally render chef selection or proposal summary */}
         {booking.status === "new request" ? (
-          // Show chef selection UI if the status is 'new request'
+          
           [1, 2, 3].map((chefIndex) => (
             <div key={chefIndex}>
               <h4>Chef {chefIndex}</h4>
@@ -358,7 +358,7 @@ export default function StaffBookings() {
                 </li>
               ))}
             </ul>
-            <p>Proposal sent, waiting for host's response</p>
+            <p>Proposal sent, waiting for host&aposs response</p>
           </div>
         )}
 
