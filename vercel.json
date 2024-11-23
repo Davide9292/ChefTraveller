@@ -6,20 +6,7 @@
       },
       {
         "src": "server/app.js",
-        "use": "vercel-node-server",
-        "config": {
-          "entrypoint": "app.js"
-        }
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "server/app.js"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "client/app/$1"
+        "use": "vercel-node-server"
       }
     ]
   }
