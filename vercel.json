@@ -6,7 +6,7 @@
       },
       {
         "src": "server/app.js",
-        "use": "vercel-node-server",
+        "use": "@vercel/node",
         "config": {
           "entrypoint": "app.js"
         }
