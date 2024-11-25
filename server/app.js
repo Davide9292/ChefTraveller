@@ -5,6 +5,8 @@ const session = require('express-session'); // Import express-session
 const cookieParser = require("cookie-parser"); // Import cookie-parser
 const cors = require("cors");
 const mongoose = require("mongoose");
+const helloRouter = require('./routes/hello'); // Import the route
+
 
 const app = express();
 const proposalRoutes = require('./routes/proposalRoutes');
