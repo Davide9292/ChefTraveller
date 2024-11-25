@@ -13,7 +13,7 @@ export default function Navbar() {
       try {
         const token = localStorage.getItem('token');
         if (token) {
-            const response = await fetchWithRefresh("http://localhost:3001/api/users/me", {
+            const response = await fetchWithRefresh("/api/users/me", {
                 headers: {
               Authorization: `Bearer ${token}`,
             },

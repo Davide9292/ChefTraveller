@@ -16,7 +16,7 @@ export default function Checkout({ params }) {
       try {
         const token = localStorage.getItem('token');
         // Use fetchWithRefresh for booking data
-        const bookingResponse = await fetchWithRefresh(`http://localhost:3001/api/bookings/${params.bookingId}`, {
+        const bookingResponse = await fetchWithRefresh(`/api/bookings/${params.bookingId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -33,7 +33,7 @@ export default function Checkout({ params }) {
           setSelectedChef(chefData);
 
           // Use fetchWithRefresh for creating a PaymentIntent (if it requires authentication)
-          const paymentIntentResponse = await fetchWithRefresh('http://localhost:3001/api/create-payment-intent', { 
+          const paymentIntentResponse = await fetchWithRefresh('/api/create-payment-intent', { 
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export default function Checkout({ params }) {
     // If payment is successful, update booking status on the backend
     try {
       const token = localStorage.getItem('token');
-      const response = await fetchWithRefresh(`http://localhost:3001/api/bookings/${params.bookingId}/confirm`, { 
+      const response = await fetchWithRefresh(`/api/bookings/${params.bookingId}/confirm`, { 
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,

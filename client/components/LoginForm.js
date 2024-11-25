@@ -13,7 +13,7 @@ export default function LoginForm({onAuthComplete, bookingId}) {
     event.preventDefault();
 
     try {
-        const response = await fetchWithRefresh("http://localhost:3001/api/auth/login", {
+        const response = await fetchWithRefresh("/api/auth/login", {
             method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export default function LoginForm({onAuthComplete, bookingId}) {
   
 
         // Fetch user data to determine role
-        const userResponse = await fetchWithRefresh("http://localhost:3001/api/users/me", {
+        const userResponse = await fetchWithRefresh("/api/users/me", {
             headers: {
             Authorization: `Bearer ${data.accessToken}`,
           },

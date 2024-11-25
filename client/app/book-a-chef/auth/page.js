@@ -64,7 +64,7 @@ export default function Auth() {
       console.log("Booking data after sending:", bookingData);
 
       // Fetch user data to determine role
-      const userResponse = await fetch("http://localhost:3001/api/users/me", {
+      const userResponse = await fetch("/api/users/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -74,7 +74,7 @@ export default function Auth() {
       const userData = await userResponse.json();
       console.log("User data:", userData); // Log the userData object
 
-      const response = await fetch("http://localhost:3001/api/bookings", {
+      const response = await fetch("/api/bookings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

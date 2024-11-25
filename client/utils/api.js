@@ -7,7 +7,7 @@ export const fetchWithRefresh = async (url, options) => {
         return response;
       } else if (response.status === 401) {
         // Refresh the token
-        const refreshResponse = await fetch("http://localhost:3001/api/auth/refresh", {
+        const refreshResponse = await fetch("/api/auth/refresh", {
           method: "POST",
           credentials: "include", // Include cookies in the request
         });

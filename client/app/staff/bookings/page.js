@@ -16,7 +16,7 @@ export default function StaffBookings() {
     const fetchBookings = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetchWithRefresh("http://localhost:3001/api/bookings", {
+        const response = await fetchWithRefresh("/api/bookings", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ export default function StaffBookings() {
     const fetchChefs = async (bookingLocation) => {
       try {
         const response = await fetchWithRefresh(
-          `http://localhost:3001/api/chefs?available=${availableOnly}&location=${bookingLocation}`,
+          `/api/chefs?available=${availableOnly}&location=${bookingLocation}`,
           {
             method: "GET",
             headers: {
@@ -190,7 +190,7 @@ export default function StaffBookings() {
         };
   
         const response = await fetchWithRefresh(
-          "http://localhost:3001/api/proposals",
+          "/api/proposals",
           {
             method: "POST",
             headers: {

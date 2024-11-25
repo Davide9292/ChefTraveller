@@ -15,7 +15,7 @@ export default function RequestForm({token}) {
     event.preventDefault();
 
     try {
-        const response = await fetchWithRefresh("http://localhost:3001/api/events", {
+        const response = await fetchWithRefresh("/api/events", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Make sure this header is set correctly

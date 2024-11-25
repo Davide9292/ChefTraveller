@@ -21,7 +21,7 @@ export default function HostProfile() {
         }
 
         const response = await fetchWithRefresh(
-          "http://localhost:3001/api/users/me",
+          "/api/users/me",
           {
             headers: {
               Authorization: `Bearer ${token}`,

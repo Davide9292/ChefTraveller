@@ -30,7 +30,7 @@ export default function RegistrationForm({ onAuthComplete, bookingId }) {
     }
 
     try {
-      const response = await fetchWithRefresh( "http://localhost:3001/api/auth/register", {
+      const response = await fetchWithRefresh( "/api/auth/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
