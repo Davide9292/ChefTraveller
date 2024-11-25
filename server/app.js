@@ -11,6 +11,8 @@ const proposalRoutes = require('./routes/proposalRoutes');
 
 const { generateAccessToken } = require('./controllers/authController'); // Import generateAccessToken
 
+app.use('/api/hello', helloRouter); // Mount the route
+
 
 // Enable CORS for all origins
 app.use(cors({
