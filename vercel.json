@@ -19,7 +19,7 @@
       },
       {
         "src": "/(.*)",
-        "dest": "client/app/$1"
+        "dest": "client/.next/$1"
       }
     ]
   }
