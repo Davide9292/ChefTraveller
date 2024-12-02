@@ -10,19 +10,17 @@ const helloRouter = require('./routes/hello'); // Import the route
 
 const app = express();
 const proposalRoutes = require('./routes/proposalRoutes');
-
 const { generateAccessToken } = require('./controllers/authController'); // Import generateAccessToken
 
 app.use('/api/hello', helloRouter); // Mount the route
 
-
 // Enable CORS for all origins
 app.use(cors({
-  origin: 'http://localhost:3000', // Or your frontend origin
-  credentials: true, // Allow credentials (cookies)
+  origin: '*', // Allow all origins in production
+  credentials: true, 
 }));
 
-const port = 3001;
+const port = process.env.PORT || 3001; // Use environment variable for port
 const bodyParser = require("body-parser");
 
 

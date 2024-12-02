@@ -6,4 +6,8 @@ const authMiddleware = require('../middleware/authMiddleware'); // Use the gener
 
 router.get('/me', authMiddleware, userController.getCurrentUser);
 
-module.exports = router;
+router.get('/test', (req, res) => {
+  res.status(200).json({ message: 'API test route working!' });
+});
+
+module.exports = router; 
