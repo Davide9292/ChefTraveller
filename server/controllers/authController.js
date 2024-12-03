@@ -1,3 +1,4 @@
+// server/controllers/authController.js
 console.log('Auth controller loaded');
 
 require('dotenv').config(); // Load environment variables in this file
