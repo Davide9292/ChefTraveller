@@ -16,12 +16,12 @@
       "dest": "server/app.js"
     },
     {
-      "handle": "filesystem" 
+      "src": "/_next/(.*)",
+      "dest": "client/.next/$1"
     },
     {
       "src": "/(.*)",
       "dest": "client/next.config.js"
     }
   ]
-
 }
