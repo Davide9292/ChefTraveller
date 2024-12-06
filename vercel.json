@@ -16,12 +16,8 @@
       "dest": "server/app.js"
     },
     {
-      "src": "/_next/(.*)",
-      "dest": "client/.next/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "client/next.config.js"
+      "dest": "client/.next/server/pages/$1"
     }
   ]
 }
