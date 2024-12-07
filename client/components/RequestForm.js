@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { fetchWithRefresh } from '../utils/api'; // Import fetchWithRefresh
 
 export default function RequestForm({token}) {
-  const [eventType, setEventType] = useState('');
-  const [eventDate, setEventDate] = useState('');
-  const [numberOfGuests, setNumberOfGuests] = useState('');
-  const [location, setLocation] = useState('');
-  const [description, setDescription] = useState('');
+  //const [eventType, setEventType] = useState('');
+  //const [eventDate, setEventDate] = useState('');
+  //const [numberOfGuests, setNumberOfGuests] = useState('');
+  //const [location, setLocation] = useState('');
+  //const [description, setDescription] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
