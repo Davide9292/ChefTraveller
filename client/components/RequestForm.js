@@ -1,5 +1,3 @@
-/*
-/*
 "use client"
 import { useState } from 'react';
 import { fetchWithRefresh } from '../utils/api'; // Import fetchWithRefresh
@@ -46,8 +44,9 @@ export default function RequestForm({token}) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Add form fields for event type, date, number of guests, location, description }*/
-    /*  { <button type="submit">Submit Request</button>
+      {/* Fix the comment syntax */}
+      {/* Add form fields for event type, date, number of guests, location, description */}
+      <button type="submit">Submit Request</button>
     </form>
   );
-} }*/
+}

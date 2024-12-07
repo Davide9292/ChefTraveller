@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchWithRefresh } from "../utils/api"; // Import fetchWithRefresh
+import Link from 'next/link';
 
 
 export default function RegistrationForm({ onAuthComplete, bookingId }) { 
@@ -146,8 +147,8 @@ export default function RegistrationForm({ onAuthComplete, bookingId }) {
             required
           />
           <label htmlFor="agreeToPolicies">
-            I agree to the <a href="/legal">Legal</a> and{" "}
-            <a href="/privacy">Privacy</a> Policies
+            I agree to the <Link href="/legal">Legal</Link> and{" "}
+            <Link href="/privacy">Privacy</Link> Policies
           </label>
         </div>
   
