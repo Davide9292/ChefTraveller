@@ -28,5 +28,6 @@
       "source": "/(.*)",
       "destination": "/client/app/$1"
     }
+    
   ]
 }
