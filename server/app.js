@@ -1,45 +1,51 @@
-//server/app.js
-require('dotenv').config(); // Load environment variables
+// server/app.js
+require("dotenv").config(); // Load environment variables
 
-const express = require('express');
-const session = require('express-session'); // Import express-session
-const cookieParser = require("cookie-parser"); // Import cookie-parser
+const express = require("express");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const MongoStore = require('connect-mongo'); // Import MongoStore
+const MongoStore = require("connect-mongo");
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken"); // Import jsonwebtoken
-const helloRouter = require('./routes/hello'); // Import the route
-
+const jwt = require("jsonwebtoken");
 
 const app = express();
-const proposalRoutes = require('./routes/proposalRoutes');
-const { generateAccessToken } = require('./controllers/authController'); // Import generateAccessToken
-
-app.use('/api/hello', helloRouter); // Mount the route
-
-// Enable CORS for all origins
-app.use(cors({
-  origin: '*', // Allow all origins in production
-  credentials: true, 
-}));
-
-const port = process.env.PORT || 3001; // Use environment variable for port
 const bodyParser = require("body-parser");
 
-
 // Import routes
+const helloRouter = require("./routes/hello");
+const proposalRoutes = require("./routes/proposalRoutes");
 const authRoutes = require("./routes/authRoutes");
 const chefRoutes = require("./routes/chefRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const userRoutes = require("./routes/userRoutes");
+const { generateAccessToken } = require("./controllers/authController");
 
+const port = process.env.PORT || 3001; // Use environment variable for port
+
+// Enable CORS dynamically based on environment
+app.use(
+  cors({
+    origin: process.env.NODE_ENV === "production" ? process.env.CLIENT_URL : "*",
+    credentials: true,
+  })
+);
+
+// Middleware
+app.use(cookieParser()); // Parse cookies
+app.use(bodyParser.json()); // Parse JSON bodies
+app.use("/api/hello", helloRouter); // Test route
+app.use("/api/proposals", proposalRoutes); // Proposal routes
 
 // Connect to MongoDB
+const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/chefsdb"; // Use .env variable
 mongoose
-  .connect(
-    "mongodb+srv://davidepedone1:mlTIK3SHD1FIe8lu@cluster0.carom.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  )
+  .connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    poolSize: 10, // Maintain up to 10 active connections
+  })
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -47,38 +53,26 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
-// Middleware
-app.use(cookieParser()); // Use cookie-parser middleware
-app.use(bodyParser.json());
-app.use('/api/proposals', proposalRoutes); // Mount proposal routes
-
-/*// Configure session middleware
-app.use(session({
-  secret: 'your_session_secret', // Replace with a strong secret
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }, // Set secure: true in production
-}));*/
-
 // Configure session middleware with MongoStore
 app.use(
   session({
-    secret: "your_session_secret",
+    secret: process.env.SESSION_SECRET || "default_session_secret", // Use a secure secret
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true },
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // Only use secure cookies in production
+      httpOnly: true, // Prevent client-side access to cookies
+    },
     store: MongoStore.create({
-      mongoUrl:
-        "mongodb+srv://davidepedone1:mlTIK3SHD1FIe8lu@cluster0.carom.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", // Replace with your MongoDB connection string
+      mongoUrl: mongoURI, // Use the same MongoDB URI for sessions
     }),
   })
 );
 
+// Refresh token endpoint
+app.post("/api/auth/refresh", async (req, res) => {
+  const refreshToken = req.cookies.refreshToken; // Get refresh token from cookies
 
-app.post('/api/auth/refresh', async (req, res) => {
-  const refreshToken = req.cookies.refreshToken; // Get refresh token from cookie
-  console.log
-  
   if (!refreshToken) {
     return res.status(401).json({ message: "Refresh token not found" });
   }
@@ -89,17 +83,12 @@ app.post('/api/auth/refresh', async (req, res) => {
 
     // Generate a new access token
     const newAccessToken = generateAccessToken({ _id: decoded.userId });
-    console.log
-    
     res.json({ accessToken: newAccessToken });
   } catch (error) {
+    console.error("Error verifying refresh token:", error);
     res.status(401).json({ message: "Invalid refresh token" });
   }
 });
-
-
-
-
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -113,6 +102,7 @@ app.get("/", (req, res) => {
   res.send("Hello from ChefTraveller server!");
 });
 
+// Start the server
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
