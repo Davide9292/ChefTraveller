@@ -22,11 +22,5 @@
       "src": "/(.*)",
       "dest": "client/app/$1"
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/client/app/$1"
-    }
   ]
 }
