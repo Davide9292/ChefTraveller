@@ -16,11 +16,23 @@
       "dest": "server/app.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "client/app/$1/page"
+      "src": "/",
+      "dest": "client/app/page"
+    },
+    {
+      "src": "/book-a-chef",
+      "dest": "client/app/book-a-chef/page"
+    },
+    {
+      "src": "/chefs/[id]",
+      "dest": "client/app/chefs/[id]/page"
     },
     {
       "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "client/app/$1/page"
     }
   ]
 }
