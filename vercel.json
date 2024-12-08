@@ -16,6 +16,10 @@
       "dest": "server/app.js"
     },
     {
+      "src": "/(.*)",
+      "dest": "client/app/$1/page"
+    },
+    {
       "handle": "filesystem"
     }
   ]
