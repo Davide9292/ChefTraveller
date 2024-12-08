@@ -5,7 +5,9 @@ const express = require('express');
 const session = require('express-session'); // Import express-session
 const cookieParser = require("cookie-parser"); // Import cookie-parser
 const cors = require("cors");
+const MongoStore = require('connect-mongo'); // Import MongoStore
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken"); // Import jsonwebtoken
 const helloRouter = require('./routes/hello'); // Import the route
 
 
@@ -32,6 +34,7 @@ const eventRoutes = require("./routes/eventRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const userRoutes = require("./routes/userRoutes");
 
+
 // Connect to MongoDB
 mongoose
   .connect(
@@ -55,6 +58,20 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: true }, // Set secure: true in production
 }));
+
+// Configure session middleware with MongoStore
+app.use(
+  session({
+    secret: "your_session_secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+    store: MongoStore.create({
+      mongoUrl:
+        "mongodb+srv://davidepedone1:mlTIK3SHD1FIe8lu@cluster0.carom.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", // Replace with your MongoDB connection string
+    }),
+  })
+);
 
 
 app.post('/api/auth/refresh', async (req, res) => {
