@@ -48,7 +48,7 @@ mongoose
   .connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    poolSize: 10, // Maintain up to 10 active connections
+    //poolSize: 10, // Maintain up to 10 active connections
   })
   .then(() => {
     console.log("Connected to MongoDB");
