@@ -51,13 +51,14 @@ mongoose
 app.use(cookieParser()); // Use cookie-parser middleware
 app.use(bodyParser.json());
 app.use('/api/proposals', proposalRoutes); // Mount proposal routes
-// Configure session middleware
+
+/*// Configure session middleware
 app.use(session({
   secret: 'your_session_secret', // Replace with a strong secret
   resave: false,
   saveUninitialized: true,
   cookie: { secure: true }, // Set secure: true in production
-}));
+}));*/
 
 // Configure session middleware with MongoStore
 app.use(
