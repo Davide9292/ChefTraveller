@@ -25,12 +25,15 @@ const { generateAccessToken } = require("./controllers/authController");
 const port = process.env.PORT || 3001; // Use environment variable for port
 
 // Enable CORS dynamically based on environment
-app.use(
-  cors({
-    origin: process.env.NODE_ENV === "production" ? process.env.CLIENT_URL : "*",
-    credentials: true,
-  })
-);
+// If in production, only allow the client URL, otherwise allow all origins
+const corsOptions = {
+  origin:
+    process.env.NODE_ENV === "production"
+      ? process.env.CLIENT_URL
+      : "*",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 // Middleware
 app.use(cookieParser()); // Parse cookies
@@ -39,7 +42,8 @@ app.use("/api/hello", helloRouter); // Test route
 app.use("/api/proposals", proposalRoutes); // Proposal routes
 
 // Connect to MongoDB
-const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/chefsdb"; // Use .env variable
+const mongoURI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/chefsdb";
 mongoose
   .connect(mongoURI, {
     useNewUrlParser: true,
@@ -56,16 +60,16 @@ mongoose
 // Configure session middleware with MongoStore
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "default_session_secret", // Use a secure secret
+    secret: process.env.SESSION_SECRET || "default_session_secret",
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // Only use secure cookies in production
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true, // Prevent client-side access to cookies
     },
     store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
-      collectionName: 'sessions',
+      mongoUrl: mongoURI,
+      collectionName: "sessions",
     }),
   })
 );
@@ -80,7 +84,10 @@ app.post("/api/auth/refresh", async (req, res) => {
 
   try {
     // Verify the refresh token
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
 
     // Generate a new access token
     const newAccessToken = generateAccessToken({ _id: decoded.userId });
