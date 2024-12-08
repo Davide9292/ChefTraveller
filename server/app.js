@@ -64,7 +64,8 @@ app.use(
       httpOnly: true, // Prevent client-side access to cookies
     },
     store: MongoStore.create({
-      mongoUrl: mongoURI, // Use the same MongoDB URI for sessions
+      mongoUrl: process.env.MONGODB_URI,
+      collectionName: 'sessions',
     }),
   })
 );
