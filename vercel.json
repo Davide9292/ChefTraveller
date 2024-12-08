@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "client/next.config.js",
+      "src": "client/package.json",
       "use": "@vercel/next"
     },
     {
@@ -15,12 +15,19 @@
       "src": "/api/(.*)",
       "dest": "server/app.js"
     },
+    
     {
-      "handle": "filesystem"
+      "src": "/_next/(.*)",
+      "dest": "/client/_next/$1"
     },
     {
+      "src": "/static/(.*)",
+      "dest": "/client/static/$1"
+    },
+    
+    {
       "src": "/(.*)",
-      "dest": "client/$1"
+      "dest": "/client/$1"
     }
   ]
 }
