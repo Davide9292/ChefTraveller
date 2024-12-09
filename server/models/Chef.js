@@ -15,6 +15,7 @@ const chefSchema = new mongoose.Schema({
       endDate: { type: Date, required: true },
     },
   ],
+  bookings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Booking' }], // Add bookings field
   // ... other fields like experience, hourlyRate, reviews, etc.
 });
 

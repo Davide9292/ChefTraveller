@@ -11,7 +11,7 @@ exports.getChefs = async (req, res) => {
 
 exports.getChefById = async (req, res) => {
   try {
-    const chef = await Chef.findById(req.params.id);
+    const chef = await Chef.findById(req.params.id).populate('bookings'); // Populate bookings field
     if (!chef) {
       return res.status(404).json({ message: 'Chef not found' });
     }

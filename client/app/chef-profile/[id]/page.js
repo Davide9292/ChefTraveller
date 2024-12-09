@@ -1,5 +1,5 @@
 'use client';
-// client/app/chef-profile/page.js
+// client/app/chef-profile/[id]/page.js
 export default function ChefProfile() {
     // Fetch chef data based on the logged-in user (replace with actual data fetching)
     const chefData = {
@@ -21,6 +21,16 @@ export default function ChefProfile() {
           {/* ... other details */}
         </div>
         {/* Add edit profile button or section */}
-      </main>
-    );
-  }
+        <h3>Confirmed Bookings</h3>
+      <ul>
+        {chef.bookings.map((booking) => (
+          <li key={booking._id}>
+            {/* Display booking details */}
+            <p>Event: {booking.occasion}</p>
+            {/* ... other booking details ... */}
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}

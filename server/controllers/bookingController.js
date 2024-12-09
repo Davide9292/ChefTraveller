@@ -63,20 +63,39 @@ exports.updateBookingStatus = async (req, res) => {
 exports.confirmBooking = async (req, res) => {
   try {
     const bookingId = req.params.id;
-    const booking = await Booking.findById(bookingId);
+    const booking = await Booking.findById(bookingId)
+      .populate("chef")
+      .populate("user"); // Populate both chef and user fields
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    // ... your booking confirmation logic ...
+    // Update chef's availability
+    const chef = await Chef.findById(booking.chef._id);
+    const bookingStart = new Date(booking.date);
+    const bookingEnd = new Date(booking.date);
+    // bookingEnd.setDate(bookingStart.getDate() + (parseInt(booking.eventDuration) - 1));
 
-    booking.status = "proposal accepted"; // Update booking status
+    chef.availability = chef.availability.filter((availability) => {
+      const startDate = new Date(availability.startDate);
+      const endDate = new Date(availability.endDate);
+      return !(bookingStart <= endDate && bookingEnd >= startDate);
+    });
 
-    // ... other code ...
+    await chef.save();
+
+    // Add booking to chef's profile
+    chef.bookings.push(booking._id);
+    await chef.save();
+
+    // Update booking status
+    booking.status = "proposal accepted";
+    await booking.save();
 
     res.json({ message: "Booking confirmed" });
   } catch (error) {
+    console.error("Error confirming booking:", error);
     res.status(500).json({ error: error.message });
   }
 };
