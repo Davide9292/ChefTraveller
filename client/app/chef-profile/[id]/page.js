@@ -4,10 +4,11 @@
 import { useState, useEffect } from "react";
 import { fetchWithRefresh } from "../../../utils/api";
 import Link from 'next/link';
+import Image from "next/image";
+
 
 export default function ChefProfile({ params }) {
   const [chef, setChef] = useState(null);
-
   useEffect(() => {
     const fetchChef = async () => {
       try {
