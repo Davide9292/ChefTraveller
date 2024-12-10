@@ -10,4 +10,8 @@ router.get('/test', (req, res) => {
   res.status(200).json({ message: 'API test route working!' });
 });
 
+router.post('/me/password/verify', authMiddleware, userController.verifyPassword); // Add this route
+router.put('/me/password', authMiddleware, userController.changePassword); // Add this route
+
+
 module.exports = router; 

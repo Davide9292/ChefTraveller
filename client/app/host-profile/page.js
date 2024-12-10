@@ -139,6 +139,13 @@ export default function HostProfile() {
           </div>
         </div>
       )}
+      <h3>Profile Settings</h3>
+          <Link href="/change-password">
+            <a>
+              <h4>Change Password</h4>
+              <button>Change</button>
+            </a>
+          </Link>
     </main>
   );
 }

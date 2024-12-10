@@ -46,7 +46,7 @@ export default function LoginForm({onAuthComplete, bookingId}) {
         if (userData.role === 'staff') {
             router.push('/staff/bookings'); // Redirect to staff page
           } else if (userData.role === 'chef') {
-            router.push('/chef-profile');
+            router.push(`/chef-profile/${userData.userId}`); // Redirect chefs to their profile page
           } else {
             router.push('/host-profile');
           }

@@ -1,36 +1,71 @@
-'use client';
 // client/app/chef-profile/[id]/page.js
-export default function ChefProfile() {
-    // Fetch chef data based on the logged-in user (replace with actual data fetching)
-    const chefData = {
-      firstName: 'John',
-      lastName: 'Doe',
-      specialization: 'Italian Cuisine',
-      biography: 'A passionate chef with 10 years of experience...',
-      // ... other chef details
+"use client";
+
+import { useState, useEffect } from "react";
+import { fetchWithRefresh } from "../../../utils/api";
+
+export default function ChefProfile({ params }) {
+  const [chef, setChef] = useState(null);
+
+  useEffect(() => {
+    const fetchChef = async () => {
+      try {
+        const response = await fetchWithRefresh(`/api/chefs/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          credentials: "include",
+        });
+        const data = await response.json();
+        setChef(data);
+      } catch (error) {
+        console.error("Error fetching chef:", error);
+      }
     };
+
+    fetchChef();
+  }, [params.id]);
+
+  if (!chef) {
+    return <div>Loading...</div>;
+  }
   
-    return (
-      <main className="profile-container">
-        <h2>Chef Profile</h2>
-        <div className="profile-details">
-          {/* Display chef details */}
-          <p>Name: {chefData.firstName} {chefData.lastName}</p>
-          <p>Specialization: {chefData.specialization}</p>
-          <p>Biography: {chefData.biography}</p>
-          {/* ... other details */}
-        </div>
-        {/* Add edit profile button or section */}
-        <h3>Confirmed Bookings</h3>
+  return (
+    <main className="profile-container">
+      <h2>
+        {chef.firstName} {chef.lastName}
+      </h2>
+  
+      <div className="profile-details">
+        <img src={chef.profilePicture} alt={`${chef.firstName} ${chef.lastName}`} />
+        <p>Specialization: {chef.specialization}</p>
+        <p>Biography: {chef.biography}</p>
+        {/* ... other chef details ... */}
+      </div>
+  
+      <h3>Confirmed Bookings</h3>
       <ul>
         {chef.bookings.map((booking) => (
           <li key={booking._id}>
-            {/* Display booking details */}
-            <p>Event: {booking.occasion}</p>
+            <h4>Booking Details</h4>
+            <p>Event Type: {booking.eventDuration}</p>
+            <p>Occasion: {booking.occasion}</p>
+            <p>Location: {booking.location}</p>
+            <p>Number of Guests: {booking.guests}</p>
+            <p>Meal Type: {booking.meal}</p>
+            <p>Food Type: {booking.food}</p>
+            <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
             {/* ... other booking details ... */}
           </li>
         ))}
       </ul>
+      <h3>Profile Settings</h3>
+          <Link href="/change-password">
+            <a>
+              <h4>Change Password</h4>
+              <button>Change</button>
+            </a>
+          </Link>
     </main>
   );
 }
