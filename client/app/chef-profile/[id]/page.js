@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { fetchWithRefresh } from "../../../utils/api";
+import Link from 'next/link';
 
 export default function ChefProfile({ params }) {
   const [chef, setChef] = useState(null);
@@ -37,7 +38,7 @@ export default function ChefProfile({ params }) {
       </h2>
   
       <div className="profile-details">
-        <img src={chef.profilePicture} alt={`${chef.firstName} ${chef.lastName}`} />
+        <Image src={chef.profilePicture} alt={`${chef.firstName} ${chef.lastName}`} />
         <p>Specialization: {chef.specialization}</p>
         <p>Biography: {chef.biography}</p>
         {/* ... other chef details ... */}
