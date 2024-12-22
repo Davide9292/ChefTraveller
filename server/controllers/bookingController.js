@@ -45,17 +45,38 @@ exports.updateBookingStatus = async (req, res) => {
     const bookingId = req.params.id;
     const { status } = req.body;
 
+    // Validate the new status
+    const validStatuses = [
+      'proposal accepted', // Host accepts the proposal
+      'proposal rejected', // Host rejects the proposal
+      'additional request', // Host requests a new proposal
+    ];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Invalid booking status' });
+    }
+
     const booking = await Booking.findById(bookingId);
     if (!booking) {
-      return res.status(404).json({ message: "Booking not found" });
+      return res.status(404).json({ message: 'Booking not found' });
     }
+
+    // If the status is 'proposal accepted', check if a chef has been selected
+    if (status === 'proposal accepted' && !localStorage.getItem(`selectedChef-${booking._id}`)) {
+      return res.status(400).json({ message: 'Please select a chef before accepting the proposal' });
+    }
+
+    // If the status is 'additional request', update it to 'waiting for new chefs proposal'
+    if (status === 'additional request') {
+      status = 'waiting for new chefs proposal';
+    }
+    
 
     booking.status = status;
     await booking.save();
 
-    res.json({ message: "Booking status updated successfully" });
+    res.json({ message: 'Booking status updated successfully' });
   } catch (error) {
-    console.error("Error updating booking status:", error);
+    console.error('Error updating booking status:', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -125,6 +146,26 @@ exports.confirmBooking = async (req, res) => {
     res.json({ message: "Booking confirmed" });
   } catch (error) {
     console.error("Error confirming booking:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.requestNewProposal = async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    // Update the booking status to 'additional request'
+    booking.status = 'additional request';
+    await booking.save();
+
+    res.json({ message: 'New proposal requested successfully' });
+  } catch (error) {
+    console.error('Error requesting new proposal:', error);
     res.status(500).json({ error: error.message });
   }
 };

@@ -113,6 +113,83 @@ export default function HostProfile() {
     }
   };
 
+
+  const handleRequestNewProposal = async (bookingId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetchWithRefresh(
+        `/api/bookings/${bookingId}/new-proposal`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        // Proposal request sent successfully
+        // Refresh the host data to reflect the changes
+        const response = await fetchWithRefresh(
+          "/api/users/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        setHostData(data);
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error(
+          "Error requesting new proposal:",
+          errorData.error || response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error requesting new proposal:", error);
+    }
+  };
+
+  const handleProposalResponse = async (bookingId, status) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetchWithRefresh(`/api/bookings/${bookingId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify({ status }),
+      });
+
+      if (response.ok) {
+        // Booking status updated successfully
+        // Refresh the host data to reflect the changes
+        const response = await fetchWithRefresh('/api/users/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: 'include',
+        });
+        const data = await response.json();
+        setHostData(data);
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error('Error updating booking status:', errorData.error || response.status);
+      }
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+    }
+  };
+
+
   return (
     <main className="profile-container">
       <h2>Welcome {hostData.firstName}!</h2>
@@ -228,14 +305,14 @@ export default function HostProfile() {
                 <p>Food Type: {booking.food}</p>
                 <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
                 <p>
-                  Status:{" "}
-                  {booking.proposal
-                    ? "Choose your chef"
-                    : "Waiting for chef proposals"}
+                  Status: {
+                    booking.status === 'additional request' ? 'Waiting for new chefs proposal' : 
+                    (booking.proposal ? 'Choose your chef' : 'Waiting for chef proposals')
+                  }
                 </p>
                 {booking.proposal && (
                   <div>
-                    <h4>Chef&aposs Proposal</h4>
+                    <h4>Che&aposs Proposal</h4>
                     <ul>
                       {booking.proposal.chefs.map((proposedChef, index) => {
                         const chef = proposedChef.chef;
@@ -260,6 +337,30 @@ export default function HostProfile() {
                         );
                       })}
                     </ul>
+                    {booking.status === "proposal sent" && (
+                      <div>
+                        <button
+                          onClick={() =>
+                            handleProposalResponse(
+                              booking._id,
+                              "proposal accepted"
+                            )
+                          }
+                        >
+                          Accept Proposal
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleProposalResponse(
+                              booking._id,
+                              "proposal rejected"
+                            )
+                          }
+                        >
+                          Reject Proposal
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
                 {localStorage.getItem(`selectedChef-${booking._id}`) && (
@@ -267,12 +368,22 @@ export default function HostProfile() {
                     <a>Proceed to Checkout</a>
                   </Link>
                 )}
-                <button onClick={() => handleEditBooking(booking)}>Edit</button>
+                <button onClick={() => handleEditBooking(booking)}>
+                  Edit
+                </button>
+                {booking.status === "proposal sent" && (
+                  <button
+                    onClick={() => handleRequestNewProposal(booking._id)}
+                  >
+                    Request New Proposal
+                  </button>
+                )}
               </div>
             )}
           </li>
         ))}
       </ul>
+
 
       {/* Modal for chef details */}
       {showModal && (
