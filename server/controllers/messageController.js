@@ -3,10 +3,10 @@ const Message = require('../models/Message');
 
 exports.sendMessage = async (req, res) => {
   try {
-    const { recipientId, bookingId, content } = req.body;
+    const { bookingId, content } = req.body;
     const senderId = req.user.userId;
 
-    const message = new Message({ sender: senderId, recipient: recipientId, booking: bookingId, content });
+    const message = new Message({ sender: senderId, booking: bookingId, content }); // Remove recipient from message creation
     await message.save();
 
     res.status(201).json({ message: 'Message sent successfully' });

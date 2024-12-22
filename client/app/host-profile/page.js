@@ -12,7 +12,6 @@ export default function HostProfile() {
   const [editingBooking, setEditingBooking] = useState(null); // Add state for editing booking
   const [showSendMessageModal, setShowSendMessageModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
-  const [messageRecipient, setMessageRecipient] = useState('');
   const [messageContent, setMessageContent] = useState('');
 
   useEffect(() => {
@@ -205,7 +204,7 @@ export default function HostProfile() {
     setMessageContent('');
   };
 
-  const handleSubmitMessage = async (recipientId, bookingId, content) => {
+  const handleSubmitMessage = async (bookingId, content) => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetchWithRefresh('/api/messages', {
@@ -435,21 +434,9 @@ export default function HostProfile() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                handleSubmitMessage(messageRecipient, selectedBooking._id, messageContent);
+                handleSubmitMessage(selectedBooking._id, messageContent);
               }}
             >
-              <div>
-                <label htmlFor="recipient">Recipient:</label>
-                <select
-                  id="recipient"
-                  value={messageRecipient}
-                  onChange={(e) => setMessageRecipient(e.target.value)}
-                  required
-                >
-                  <option value="">Select a staff member</option>
-                  {/* Fetch and display staff members here */}
-                </select>
-              </div>
               <div>
                 <label htmlFor="message">Message:</label>
                 <textarea
