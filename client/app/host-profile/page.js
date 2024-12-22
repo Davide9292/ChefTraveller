@@ -113,6 +113,48 @@ export default function HostProfile() {
     }
   };
 
+
+  const handleRequestNewProposal = async (bookingId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetchWithRefresh(
+        `/api/bookings/${bookingId}/new-proposal`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        // Proposal request sent successfully
+        // Refresh the host data to reflect the changes
+        const response = await fetchWithRefresh(
+          "http://localhost:3001/api/users/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        setHostData(data);
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error(
+          "Error requesting new proposal:",
+          errorData.error || response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error requesting new proposal:", error);
+    }
+  };
+
   return (
     <main className="profile-container">
       <h2>Welcome {hostData.firstName}!</h2>
