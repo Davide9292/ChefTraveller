@@ -262,6 +262,11 @@ export default function HostProfile() {
                     </ul>
                   </div>
                 )}
+            {booking.status === 'proposal sent' && ( // Show the button if the status is 'proposal sent'
+                <button onClick={() => handleRequestNewProposal(booking._id)}>
+                  Request New Proposal
+                </button>
+              )}
                 {localStorage.getItem(`selectedChef-${booking._id}`) && (
                   <Link href={`/checkout/${booking._id}`}>
                     <a>Proceed to Checkout</a>

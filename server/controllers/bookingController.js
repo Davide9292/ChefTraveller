@@ -128,3 +128,23 @@ exports.confirmBooking = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.requestNewProposal = async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    // Update the booking status to 'additional request'
+    booking.status = 'additional request';
+    await booking.save();
+
+    res.json({ message: 'New proposal requested successfully' });
+  } catch (error) {
+    console.error('Error requesting new proposal:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
