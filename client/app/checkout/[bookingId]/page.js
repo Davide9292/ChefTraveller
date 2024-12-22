@@ -9,7 +9,7 @@ export default function Checkout({ params }) {
   const router = useRouter();
   const [booking, setBooking] = useState(null);
   const [selectedChef, setSelectedChef] = useState(null);
-  const [paymentIntent, setPaymentIntent] = useState(null); // To store the PaymentIntent from Stripe
+  //const [paymentIntent, setPaymentIntent] = useState(null); // To store the PaymentIntent from Stripe
 
   useEffect(() => {
     const fetchBookingData = async () => {
@@ -129,6 +129,7 @@ export default function Checkout({ params }) {
   );
 }
 
+{/*
 // Helper function to calculate the total price
 function calculateTotalPrice(booking, chef) {
   // ... calculate total price based on booking and chef details ...
@@ -137,4 +138,4 @@ function calculateTotalPrice(booking, chef) {
   const pricePerGuest = 20; // Replace with your actual price per guest
   const totalPrice = basePrice + booking.guests * pricePerGuest;
   return totalPrice;
-}
+} */}
