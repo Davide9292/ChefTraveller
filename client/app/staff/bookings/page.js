@@ -99,15 +99,15 @@ export default function StaffBookings() {
   }
 
 
-  // const handleChefSelection = (bookingId, chefId, isChecked) => {
-  //   setSelectedChefs((prevSelectedChefs) => ({
-  //     ...prevSelectedChefs,
-  //     [bookingId]: {
-  //       ...prevSelectedChefs[bookingId],
-  //       [chefId]: isChecked,
-  //     },
-  //   }));
-  // };
+  {/* const handleChefSelection = (bookingId, chefId, isChecked) => {
+    setSelectedChefs((prevSelectedChefs) => ({
+      ...prevSelectedChefs,
+      [bookingId]: {
+        ...prevSelectedChefs[bookingId],
+        [chefId]: isChecked,
+        },
+      }));
+    }; */}
 
   const handlePriceChange = (bookingId, chefId, price) => {
     setChefPrices((prevChefPrices) => ({
@@ -215,6 +215,41 @@ export default function StaffBookings() {
     }
   };
 
+  const handleBookingStatusChange = async (bookingId, status) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetchWithRefresh(`/api/bookings/${bookingId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify({ status }),
+      });
+
+      if (response.ok) {
+        // Booking status updated successfully
+        // Refresh the bookings data to reflect the changes
+        const response = await fetchWithRefresh('http://localhost:3001/api/bookings', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: 'include',
+        });
+        const data = await response.json();
+        setBookings(data);
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error('Error updating booking status:', errorData.error || response.status);
+      }
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+    }
+  };
+
+
   return (
     <main className="bookings-container">
       <h2>Staff Bookings</h2>
@@ -242,132 +277,170 @@ export default function StaffBookings() {
               </p>
 
               <h3>Select Chefs and Set Prices</h3>
-            <div>
-              <input
-                type="checkbox"
-                id="availableOnly"
-                checked={availableOnly}
-                onChange={(e) => setAvailableOnly(e.target.checked)}
-              />
-              <label htmlFor="availableOnly">Only show available chefs</label>
-            </div>
+              <div>
+                <input
+                  type="checkbox"
+                  id="availableOnly"
+                  checked={availableOnly}
+                  onChange={(e) => setAvailableOnly(e.target.checked)}
+                />
+                <label htmlFor="availableOnly">
+                  Only show available chefs
+                </label>
+              </div>
 
-        {/* Conditionally render chef selection or proposal summary */}
-        {booking.status === "new request" ? (
-          
-          [1, 2, 3].map((chefIndex) => (
-            <div key={chefIndex}>
-              <h4>Chef {chefIndex}</h4>
-              {selectedChefs[booking._id]?.[chefIndex] ? (
-                <div>
-                  {
-                    chefs.find(
-                      (chef) =>
-                        chef._id === selectedChefs[booking._id]?.[chefIndex]
-                    )?.firstName
-                  }{" "}
-                  {
-                    chefs.find(
-                      (chef) =>
-                        chef._id === selectedChefs[booking._id]?.[chefIndex]
-                    )?.lastName
-                  }
-                  <button
-                    onClick={() =>
-                      handleChefDropdownToggle(booking._id, chefIndex)
-                    }
-                  >
-                    Change Chef
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleChefDelete(booking._id, chefIndex)
-                    }
-                  >
-                    Delete Chef
-                  </button>
-                  <div className="price-input">
-                    <span className="euro-symbol">€</span>
-                    <input
-                      type="number"
-                      placeholder="Price"
-                      value={chefPrices[booking._id]?.[chefIndex] || ""}
-                      onChange={(e) =>
-                        handlePriceChange(
-                          booking._id,
-                          chefIndex,
-                          e.target.value
-                        )
-                      }
-                    />
-                  </div>
-                </div>
-              ) : (
-                <button
-                  onClick={() =>
-                    handleChefDropdownToggle(booking._id, chefIndex)
-                  }
-                >
-                  Select Chef
-                </button>
-              )}
-              {showChefDropdown[booking._id]?.[chefIndex] && (
-                <ul className="chef-dropdown">
-                  {chefs
-                    .filter((chef) =>
-                      availableOnly
-                        ? isChefAvailableAtLocation(
-                            booking.location,
-                            chef.availability
-                          )
-                        : true
-                    )
-                    .map((chef) => (
-                      <li key={chef._id}>
+              {/* Conditionally render chef selection or proposal summary */}
+              {booking.status === "new request" ||
+              booking.status === "additional request" ? (
+                // Show chef selection UI if the status is 'new request' or 'additional request'
+                [1, 2, 3].map((chefIndex) => (
+                  <div key={chefIndex}>
+                    <h4>Chef {chefIndex}</h4>
+                    {selectedChefs[booking._id]?.[chefIndex] ? (
+                      <div>
+                        {
+                          chefs.find(
+                            (chef) =>
+                              chef._id ===
+                              selectedChefs[booking._id]?.[chefIndex]
+                          )?.firstName
+                        }{" "}
+                        {
+                          chefs.find(
+                            (chef) =>
+                              chef._id ===
+                              selectedChefs[booking._id]?.[chefIndex]
+                          )?.lastName
+                        }
                         <button
                           onClick={() =>
-                            handleChefSelect(booking._id, chefIndex, chef._id)
+                            handleChefDropdownToggle(booking._id, chefIndex)
                           }
->
-            {chef.firstName} {chef.lastName} -{" "}
-            {isChefAvailableForBooking(
-              bookingStart,
-              bookingEnd,
-              chef.availability
-            )
-              ? "Available"
-              : "Not Available"} {/* Add availability status here */}
-          </button>
+                        >
+                          Change Chef
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleChefDelete(booking._id, chefIndex)
+                          }
+                        >
+                          Delete Chef
+                        </button>
+                        <div className="price-input">
+                          <span className="euro-symbol">€</span>
+                          <input
+                            type="number"
+                            placeholder="Price"
+                            value={
+                              chefPrices[booking._id]?.[chefIndex] || ""
+                            }
+                            onChange={(e) =>
+                              handlePriceChange(
+                                booking._id,
+                                chefIndex,
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          handleChefDropdownToggle(booking._id, chefIndex)
+                        }
+                      >
+                        Select Chef
+                      </button>
+                    )}
+                    {showChefDropdown[booking._id]?.[chefIndex] && (
+                      <ul className="chef-dropdown">
+                        {chefs
+                          .filter((chef) =>
+                            availableOnly
+                              ? isChefAvailableAtLocation(
+                                  booking.location,
+                                  chef.availability
+                                )
+                              : true
+                          )
+                          .map((chef) => (
+                            <li key={chef._id}>
+                              <button
+                                onClick={() =>
+                                  handleChefSelect(
+                                    booking._id,
+                                    chefIndex,
+                                    chef._id
+                                  )
+                                }
+                              >
+                                {chef.firstName} {chef.lastName} -{" "}
+                                {isChefAvailableForBooking(
+                                  bookingStart,
+                                  bookingEnd,
+                                  chef.availability
+                                )
+                                  ? "Available"
+                                  : "Not Available"}
+                              </button>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                  </div>
+                ))
+              ) : (
+                // Show proposal summary for all other statuses
+                <div>
+                  <h4>Proposed Chefs</h4>
+                  <ul>
+                    {booking.proposal.chefs.map((chef, index) => (
+                      <li key={index}>
+                        <p>
+                          Chef {index + 1}: {chef.chef.firstName}{" "}
+                          {chef.chef.lastName} - Price: €{chef.price}
+                        </p>
                       </li>
                     ))}
-                </ul>
+                  </ul>
+                  <p>Proposal sent, waiting for host's response</p>
+                </div>
               )}
-            </div>
-          ))
-        ) : (
-          // Show proposal summary for all other statuses
-          <div>
-            <h4>Proposed Chefs</h4>
-            <ul>
-              {booking.proposal.chefs.map((chef, index) => (
-                <li key={index}>
-                  <p>
-                    Chef {index + 1}: {chef.chef.firstName}{" "}
-                    {chef.chef.lastName} - Price: €{chef.price}
-                  </p>
-                </li>
-              ))}
-            </ul>
-            <p>Proposal sent, waiting for host&aposs response</p>
-          </div>
-        )}
 
-          {/* Conditionally render the Send Proposal button */}
-          {booking.status === 'new request' && (
-            <button onClick={() => handleSendProposal(booking._id)}>
-              Send Proposal
-            </button>
-          )}
+              {/* Conditionally render the Send Proposal button */}
+              {(booking.status === "new request" ||
+                booking.status === "additional request") && (
+                <button onClick={() => handleSendProposal(booking._id)}>
+                  Send Proposal
+                </button>
+              )}
+
+              {/* Add buttons to update booking status */}
+              {booking.status === "proposal sent" && (
+                <div>
+                  <button
+                    onClick={() =>
+                      handleBookingStatusChange(
+                        booking._id,
+                        "additional request"
+                      )
+                    }
+                  >
+                    Additional Request
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleBookingStatusChange(
+                        booking._id,
+                        "proposal rejected"
+                      )
+                    }
+                  >
+                    Reject Proposal
+                  </button>
+                </div>
+              )}
             </li>
           );
         })}
