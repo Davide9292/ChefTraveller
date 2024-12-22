@@ -404,7 +404,7 @@ export default function StaffBookings() {
                       </li>
                     ))}
                   </ul>
-                  <p>Proposal sent, waiting for host's response</p>
+                  <p>Proposal sent, waiting for host`&apos;` response</p>
                 </div>
               )}
 
