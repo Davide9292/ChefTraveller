@@ -64,26 +64,26 @@ export default function ChangePassword() {
     }
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetchWithRefresh('/api/users/me/password', {
-        method: 'PUT',
+      const token = localStorage.getItem("token");
+      const response = await fetchWithRefresh("/api/users/me/password", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({ currentPassword, newPassword }),
       });
 
       if (response.ok) {
-        alert('Password changed successfully');
-          // Redirect based on user role
-        const token = localStorage.getItem('token');
-        const decodedToken = jwt.decode(token);
-        if (decodedToken.role === 'chef') {
-            router.push(`/chef-profile/${decodedToken.userId}`);
+        alert("Password changed successfully");
+
+        // Redirect based on user role
+        const decodedToken = jwt.decode(token); // Decode the token here
+        if (decodedToken.role === "chef") {
+          router.push(`/chef-profile/${decodedToken.userId}`);
         } else {
-            router.push('/host-profile');
+          router.push("/host-profile");
         }
       } else {
         const errorData = await response.json();
