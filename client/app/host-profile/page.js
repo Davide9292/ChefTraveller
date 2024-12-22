@@ -88,7 +88,7 @@ export default function HostProfile() {
         // Booking updated successfully
         // Refresh the host data to reflect the changes
         const response = await fetchWithRefresh(
-          "http://localhost:3001/api/users/me",
+          "/api/users/me",
           {
             headers: {
               Authorization: `Bearer ${token}`,
