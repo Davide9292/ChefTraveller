@@ -65,6 +65,12 @@ exports.updateBookingStatus = async (req, res) => {
       return res.status(400).json({ message: 'Please select a chef before accepting the proposal' });
     }
 
+    // If the status is 'additional request', update it to 'waiting for new chefs proposal'
+    if (status === 'additional request') {
+      status = 'waiting for new chefs proposal';
+    }
+    
+
     booking.status = status;
     await booking.save();
 

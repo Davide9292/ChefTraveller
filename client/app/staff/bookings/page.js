@@ -263,6 +263,7 @@ export default function StaffBookings() {
           return (
             <li key={booking._id}>
               <h3>Booking Details</h3>
+              <p>Status {booking.status === 'additional request' ? 'Waiting for new chefs proposal' : booking.status}</p>
               <p>Event Type: {booking.eventDuration}</p>
               <p>Occasion: {booking.occasion}</p>
               <p>Location: {booking.location}</p>

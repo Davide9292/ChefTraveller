@@ -305,14 +305,14 @@ export default function HostProfile() {
                 <p>Food Type: {booking.food}</p>
                 <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
                 <p>
-                  Status:{" "}
-                  {booking.proposal
-                    ? "Choose your chef"
-                    : "Waiting for chef proposals"}
+                  Status: {
+                    booking.status === 'additional request' ? 'Waiting for new chefs proposal' : 
+                    (booking.proposal ? 'Choose your chef' : 'Waiting for chef proposals')
+                  }
                 </p>
                 {booking.proposal && (
                   <div>
-                    <h4>Chef&aposs Proposal</h4>
+                    <h4>Che&aposs Proposal</h4>
                     <ul>
                       {booking.proposal.chefs.map((proposedChef, index) => {
                         const chef = proposedChef.chef;
