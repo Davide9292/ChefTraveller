@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchWithRefresh } from '../../utils/api';
+import jwt from 'jsonwebtoken'; // Import the jwt module
 
 export default function ChangePassword() {
   const router = useRouter();
