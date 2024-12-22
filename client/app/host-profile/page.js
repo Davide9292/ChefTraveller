@@ -10,7 +10,10 @@ export default function HostProfile() {
   const [showModal, setShowModal] = useState(false);
   const [selectedChef, setSelectedChef] = useState(null);
   const [editingBooking, setEditingBooking] = useState(null); // Add state for editing booking
-
+  const [showSendMessageModal, setShowSendMessageModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [messageRecipient, setMessageRecipient] = useState('');
+  const [messageContent, setMessageContent] = useState('');
 
   useEffect(() => {
     const fetchHostData = async () => {
@@ -189,10 +192,6 @@ export default function HostProfile() {
     }
   };
 
-  const [showSendMessageModal, setShowSendMessageModal] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState(null);
-  const [messageRecipient, setMessageRecipient] = useState('');
-  const [messageContent, setMessageContent] = useState('');
 
   const handleSendMessageClick = (booking) => {
     setSelectedBooking(booking);

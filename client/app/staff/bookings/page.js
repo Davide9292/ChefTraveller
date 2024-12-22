@@ -320,6 +320,8 @@ export default function StaffBookings() {
 
               <h3>Messages</h3>
               <ul>
+              {/* Call fetchMessages for each booking */}
+              {fetchMessages(booking._id)} 
                 {(messages[booking._id] || []).map((message) => (
                   <li key={message._id}>
                     <p>From: {message.sender.firstName} {message.sender.lastName}</p>
