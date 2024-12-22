@@ -249,6 +249,34 @@ export default function StaffBookings() {
     }
   };
 
+  const [messages, setMessages] = useState({}); // State to store messages for each booking
+    
+  const fetchMessages = async (bookingId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setMessages((prevMessages) => ({
+          ...prevMessages,
+          [bookingId]: data,
+        }));
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error('Error fetching messages:', errorData.error || response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
 
   return (
     <main className="bookings-container">
@@ -289,6 +317,17 @@ export default function StaffBookings() {
                   Only show available chefs
                 </label>
               </div>
+
+              <h3>Messages</h3>
+              <ul>
+                {(messages[booking._id] || []).map((message) => (
+                  <li key={message._id}>
+                    <p>From: {message.sender.firstName} {message.sender.lastName}</p>
+                    <p>To: {message.recipient.firstName} {message.recipient.lastName}</p>
+                    <p>{message.content}</p>
+                  </li>
+                ))}
+              </ul>
 
               {/* Conditionally render chef selection or proposal summary */}
               {booking.status === "new request" ||
