@@ -60,6 +60,35 @@ exports.updateBookingStatus = async (req, res) => {
   }
 };
 
+exports.editBooking = async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+    const { eventDuration, occasion, location, guests, meal, food, date, comments } = req.body; // Include comments in request body
+
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    // Update the booking with the new data
+    booking.eventDuration = eventDuration;
+    booking.occasion = occasion;
+    booking.location = location;
+    booking.guests = guests;
+    booking.meal = meal;
+    booking.food = food;
+    booking.date = date;
+    booking.comments = comments; // Add the comments to the booking
+    await booking.save();
+
+    res.json({ message: 'Booking updated successfully' });
+  } catch (error) {
+    console.error('Error updating booking:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 exports.confirmBooking = async (req, res) => {
   try {
     const bookingId = req.params.id;
