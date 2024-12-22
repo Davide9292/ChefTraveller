@@ -200,7 +200,6 @@ export default function HostProfile() {
   const handleSendMessageModalClose = () => {
     setShowSendMessageModal(false);
     setSelectedBooking(null);
-    setMessageRecipient('');
     setMessageContent('');
   };
 
@@ -214,7 +213,7 @@ export default function HostProfile() {
           Authorization: `Bearer ${token}`,
         },
         credentials: 'include',
-        body: JSON.stringify({ recipientId, bookingId, content }),
+        body: JSON.stringify({ bookingId, content }),
       });
 
       if (response.ok) {
