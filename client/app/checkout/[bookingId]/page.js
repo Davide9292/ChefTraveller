@@ -92,21 +92,49 @@ export default function Checkout({ params }) {
   return (
     <main className="checkout-container">
       <h2>Checkout</h2>
-      {/* Display booking details */}
-      {/* Display selected chef details and price */}
+
+      <h3>Booking Details</h3>
+      <p>Event Type: {booking.eventDuration}</p>
+      <p>Occasion: {booking.occasion}</p>
+      <p>Location: {booking.location}</p>
+      <p>Number of Guests: {booking.guests}</p>
+      <p>Meal Type: {booking.meal}</p>
+      <p>Food Type: {booking.food}</p>
+      <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
+
+      <h3>Selected Chef</h3>
+      <p>Name: {selectedChef.firstName} {selectedChef.lastName}</p>
+      <p>Specialization: {selectedChef.specialization}</p>
+      {/* ... other chef details ... */}
+
       <h3>Payment Terms</h3>
       <p>You will be charged 20% of the total price now.</p>
       <p>The remaining amount will be automatically charged 2 days before the event.</p>
-      {/* ... Cancellation policy ... */}
+
+      <h3>Cancellation Policy</h3>
+      <p>
+        Cancellations made more than 3 days before the event will be refunded in full.
+      </p>
+      <p>
+        Cancellations made within 3 days of the event will forfeit the 20% upfront payment.
+      </p>
+
       <form onSubmit={handleStripeSubmit}>
-        {/* ... Integrate Stripe.js elements here ... */}
-        <button type="submit" disabled={!paymentIntent}>Proceed to Payment</button>
+        {/* Integrate Stripe.js elements here */}
+        <button type="submit" disabled={!clientSecret}>
+          Proceed to Payment
+        </button>
       </form>
     </main>
   );
 }
 
 // Helper function to calculate the total price
-//function calculateTotalPrice(booking, chef) {
+function calculateTotalPrice(booking, chef) {
   // ... calculate total price based on booking and chef details ...
-//}
+  // This is just an example, adjust the logic as needed
+  const basePrice = 100; // Replace with your actual base price
+  const pricePerGuest = 20; // Replace with your actual price per guest
+  const totalPrice = basePrice + booking.guests * pricePerGuest;
+  return totalPrice;
+}
