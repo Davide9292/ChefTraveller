@@ -76,12 +76,15 @@ exports.changePassword = async (req, res) => {
 exports.getMessages = async (req, res) => {
   try {
     const userId = req.user.userId;
-    console.log('Fetching messages for user:', req.user.userId); // Log the user ID
+    console.log('Fetching messages for user:', req.user.userId);
 
-    // Fetch messages where the user is either the sender or the recipient
-    const messages = await Message.find({ sender: userId })
-    .populate('sender')
-    .populate('booking');
+    // Add this line to get the bookingId from the query parameters
+    const bookingId = req.query.bookingId; 
+
+    // Fetch messages where the user is the sender and the booking matches the bookingId
+    const messages = await Message.find({ sender: userId, booking: bookingId })
+      .populate('sender')
+      .populate('booking');
 
     res.json(messages);
   } catch (error) {
