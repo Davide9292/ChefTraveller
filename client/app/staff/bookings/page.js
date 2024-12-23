@@ -11,6 +11,7 @@ export default function StaffBookings() {
   const [chefs, setChefs] = useState([]);
   const [availableOnly, setAvailableOnly] = useState(false);
   const [showChefDropdown, setShowChefDropdown] = useState({}); // State to control chef dropdowns
+  const [messages, setMessages] = useState({}); // State to store messages for each booking
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -174,15 +175,12 @@ export default function StaffBookings() {
   };
 
   
-  const [messages, setMessages] = useState({}); // State to store messages for each booking
   const fetchedBookings = new Set(); // Keep track of fetched bookings
     
   const fetchMessages = async (bookingId) => {
     if (fetchedBookings.has(bookingId)) {
       return; // Prevent fetching messages for the same booking repeatedly
-    }
-    
-  
+    } 
     try {
       console.log('Fetching messages for booking:', bookingId); // Log the booking ID
       const token = localStorage.getItem('token');
@@ -342,7 +340,6 @@ export default function StaffBookings() {
                 {(messages[booking._id] || []).map((message) => (
                   <li key={message._id}>
                     <p>From: {message.sender.firstName} {message.sender.lastName}</p>
-                    {/* <p>To: {message.recipient.firstName} {message.recipient.lastName}</p> */}
                     <p>{message.content}</p>
                   </li>
                 ))}
