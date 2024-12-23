@@ -281,7 +281,7 @@ export default function StaffBookings() {
       if (response.ok) {
         // Booking status updated successfully
         // Refresh the bookings data to reflect the changes
-        const response = await fetchWithRefresh('http://localhost:3001/api/bookings', {
+        const response = await fetchWithRefresh('/api/bookings', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
