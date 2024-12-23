@@ -1,5 +1,6 @@
 // server/controllers/userController.js
 const User = require('../models/User'); // Import the User model
+const Message = require('../models/Message'); // Import the Message model
 const bcrypt = require('bcrypt');
 
 exports.getCurrentUser = async (req, res) => {
