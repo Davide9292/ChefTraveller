@@ -178,7 +178,7 @@ export default function StaffBookings() {
   };
 
   
-  const fetchedBookings = new Set(); // Keep track of fetched bookings
+  const fetchedBookings = useState(new Set()); // Keep track of fetched bookings
     
   const fetchMessages = async (bookingId) => {
     if (fetchedBookings.has(bookingId)) {
@@ -197,6 +197,7 @@ export default function StaffBookings() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Messages fetched for booking:', bookingId, data);
         console.log('Messages received:', data); // Add this debug log
         setMessages((prevMessages) => ({
           ...prevMessages,
