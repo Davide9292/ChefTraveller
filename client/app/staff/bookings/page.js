@@ -215,6 +215,40 @@ export default function StaffBookings() {
     }
   };
 
+  const [messages, setMessages] = useState({}); // State to store messages for each booking
+  const fetchedBookings = new Set(); // Keep track of fetched bookings
+    
+  const fetchMessages = async (bookingId) => {
+    if (fetchedBookings.has(bookingId)) {
+      return; // Prevent fetching messages for the same booking repeatedly
+    }
+  
+    try {
+      console.log('Fetching messages for booking:', bookingId); // Log the booking ID
+      const token = localStorage.getItem('token');
+      const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setMessages((prevMessages) => ({
+          ...prevMessages,
+          [bookingId]: data,
+        }));
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error('Error fetching messages:', errorData.error || response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
   const handleBookingStatusChange = async (bookingId, status) => {
     try {
       const token = localStorage.getItem('token');
@@ -246,35 +280,6 @@ export default function StaffBookings() {
       }
     } catch (error) {
       console.error('Error updating booking status:', error);
-    }
-  };
-
-  const [messages, setMessages] = useState({}); // State to store messages for each booking
-    
-  const fetchMessages = async (bookingId) => {
-    try {
-      console.log('Fetching messages for booking:', bookingId); // Log the booking ID
-      const token = localStorage.getItem('token');
-      const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: 'include',
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        setMessages((prevMessages) => ({
-          ...prevMessages,
-          [bookingId]: data,
-        }));
-      } else {
-        // Handle error
-        const errorData = await response.json();
-        console.error('Error fetching messages:', errorData.error || response.status);
-      }
-    } catch (error) {
-      console.error('Error fetching messages:', error);
     }
   };
 
@@ -321,12 +326,10 @@ export default function StaffBookings() {
 
               <h3>Messages</h3>
               <ul>
-              {/* Call fetchMessages for each booking */}
-              {fetchMessages(booking._id)} 
                 {(messages[booking._id] || []).map((message) => (
                   <li key={message._id}>
                     <p>From: {message.sender.firstName} {message.sender.lastName}</p>
-                    <p>To: {message.recipient.firstName} {message.recipient.lastName}</p>
+                    {/* <p>To: {message.recipient.firstName} {message.recipient.lastName}</p> */}
                     <p>{message.content}</p>
                   </li>
                 ))}
