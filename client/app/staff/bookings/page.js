@@ -253,6 +253,7 @@ export default function StaffBookings() {
     
   const fetchMessages = async (bookingId) => {
     try {
+      console.log('Fetching messages for booking:', bookingId); // Log the booking ID
       const token = localStorage.getItem('token');
       const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`, {
         headers: {

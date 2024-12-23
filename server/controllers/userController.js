@@ -75,6 +75,7 @@ exports.changePassword = async (req, res) => {
 exports.getMessages = async (req, res) => {
   try {
     const userId = req.user.userId;
+    console.log('Fetching messages for user:', req.user.userId); // Log the user ID
 
     // Fetch messages where the user is either the sender or the recipient
     const messages = await Message.find({ $or: [{ sender: userId }, { recipient: userId }] })
