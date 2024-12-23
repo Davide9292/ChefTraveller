@@ -79,10 +79,9 @@ exports.getMessages = async (req, res) => {
     console.log('Fetching messages for user:', req.user.userId); // Log the user ID
 
     // Fetch messages where the user is either the sender or the recipient
-    const messages = await Message.find({ $or: [{ sender: userId }, { recipient: userId }] })
-      .populate('sender')
-      .populate('recipient')
-      .populate('booking');
+    const messages = await Message.find({ sender: userId })
+    .populate('sender')
+    .populate('booking');
 
     res.json(messages);
   } catch (error) {
