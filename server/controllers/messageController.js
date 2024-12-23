@@ -15,3 +15,19 @@ exports.sendMessage = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getMessages = async (req, res) => {
+    try {
+      const userId = req.user.userId;
+  
+      // Fetch messages where the user is either the sender or the recipient
+      const messages = await Message.find({ $or: [{ sender: userId }, { recipient: userId }] })
+        .populate('sender')
+        .populate('booking');
+  
+      res.json(messages);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      res.status(500).json({ error: error.message });
+    }
+  };
