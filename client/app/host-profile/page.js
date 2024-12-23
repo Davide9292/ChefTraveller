@@ -10,7 +10,9 @@ export default function HostProfile() {
   const [showModal, setShowModal] = useState(false);
   const [selectedChef, setSelectedChef] = useState(null);
   const [editingBooking, setEditingBooking] = useState(null); // Add state for editing booking
-
+  const [showSendMessageModal, setShowSendMessageModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [messageContent, setMessageContent] = useState('');
 
   useEffect(() => {
     const fetchHostData = async () => {
@@ -189,6 +191,44 @@ export default function HostProfile() {
     }
   };
 
+
+  const handleSendMessageClick = (booking) => {
+    setSelectedBooking(booking);
+    setShowSendMessageModal(true);
+  };
+
+  const handleSendMessageModalClose = () => {
+    setShowSendMessageModal(false);
+    setSelectedBooking(null);
+    setMessageContent('');
+  };
+
+  const handleSubmitMessage = async (bookingId, content) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetchWithRefresh('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify({ bookingId, content }),
+      });
+
+      if (response.ok) {
+        // Message sent successfully
+        alert('Message sent successfully!');
+        handleSendMessageModalClose();
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error('Error sending message:', errorData.error || response.status);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
 
   return (
     <main className="profile-container">
@@ -380,9 +420,39 @@ export default function HostProfile() {
                 )}
               </div>
             )}
+            <button onClick={() => handleSendMessageClick(booking)}>Send Message</button>
           </li>
         ))}
       </ul>
+
+   {/* Modal for sending messages */}
+   {showSendMessageModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Send Message</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmitMessage(selectedBooking._id, messageContent);
+              }}
+            >
+              <div>
+                <label htmlFor="message">Message:</label>
+                <textarea
+                  id="message"
+                  value={messageContent}
+                  onChange={(e) => setMessageContent(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit">Send</button>
+              <button type="button" onClick={handleSendMessageModalClose}>
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
 
       {/* Modal for chef details */}

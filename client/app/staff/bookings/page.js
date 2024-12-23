@@ -11,6 +11,8 @@ export default function StaffBookings() {
   const [chefs, setChefs] = useState([]);
   const [availableOnly, setAvailableOnly] = useState(false);
   const [showChefDropdown, setShowChefDropdown] = useState({}); // State to control chef dropdowns
+  const [messages, setMessages] = useState({}); // State to store messages for each booking
+  const fetchedBookings = new Set(); // Keep track of fetched bookings
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -89,6 +91,51 @@ export default function StaffBookings() {
     fetchBookings(); // Call fetchBookings to initiate the process
   }, [availableOnly]);
 
+
+    const fetchMessages = async (bookingId) => {
+    if (fetchedBookings.has(bookingId)) {
+      return; // Prevent fetching messages for the same booking repeatedly
+    }
+
+    try {
+      console.log("Fetching messages for booking:", bookingId);
+      const token = localStorage.getItem("token");
+      const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Received messages:", data);
+        setMessages((prevMessages) => ({
+          ...prevMessages,
+          [bookingId]: data,
+        }));
+        fetchedBookings.add(bookingId);
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error(
+          "Error fetching messages:",
+          errorData.error || response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  };
+    // Add the useEffect hook here to call fetchMessages for each booking
+    useEffect(() => {
+      bookings.forEach((booking) => {
+        fetchMessages(booking._id);
+      });
+    }, [bookings]); 
+
   function isChefAvailableForBooking(bookingStart, bookingEnd, chefAvailability) {
     // Check if the chef has any availability entries that cover the entire booking period
     return chefAvailability.some(availability => {
@@ -99,15 +146,15 @@ export default function StaffBookings() {
   }
 
 
-  {/* const handleChefSelection = (bookingId, chefId, isChecked) => {
-    setSelectedChefs((prevSelectedChefs) => ({
-      ...prevSelectedChefs,
-      [bookingId]: {
-        ...prevSelectedChefs[bookingId],
-        [chefId]: isChecked,
-        },
-      }));
-    }; */}
+    {/* const handleChefSelection = (bookingId, chefId, isChecked) => {
+        setSelectedChefs((prevSelectedChefs) => ({
+          ...prevSelectedChefs,
+          [bookingId]: {
+            ...prevSelectedChefs[bookingId],
+            [chefId]: isChecked,
+            },
+          }));
+        }; */}
 
   const handlePriceChange = (bookingId, chefId, price) => {
     setChefPrices((prevChefPrices) => ({
@@ -215,6 +262,8 @@ export default function StaffBookings() {
     }
   };
 
+ 
+
   const handleBookingStatusChange = async (bookingId, status) => {
     try {
       const token = localStorage.getItem('token');
@@ -231,7 +280,7 @@ export default function StaffBookings() {
       if (response.ok) {
         // Booking status updated successfully
         // Refresh the bookings data to reflect the changes
-        const response = await fetchWithRefresh('http://localhost:3001/api/bookings', {
+        const response = await fetchWithRefresh('/api/bookings', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -416,6 +465,16 @@ export default function StaffBookings() {
                   Send Proposal
                 </button>
               )}
+
+              <h3>Messages</h3>
+              <ul>
+                {(messages[booking._id] || []).map((message) => (
+                  <li key={message._id}>
+                    <p>From: {message.sender.firstName} {message.sender.lastName}</p>
+                    <p>{message.content}</p>
+                  </li>
+                ))}
+              </ul>
 
               {/* Add buttons to update booking status */}
               {booking.status === "proposal sent" && (

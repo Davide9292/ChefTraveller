@@ -5,7 +5,7 @@ const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware'); // Use the general auth middleware
 
 router.get('/me', authMiddleware, userController.getCurrentUser);
-
+router.get('/me/messages', authMiddleware, userController.getMessages); // Add this route
 router.get('/test', (req, res) => {
   res.status(200).json({ message: 'API test route working!' });
 });

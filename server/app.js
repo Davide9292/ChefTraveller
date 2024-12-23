@@ -20,6 +20,7 @@ const chefRoutes = require("./routes/chefRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const userRoutes = require("./routes/userRoutes");
+const messageRoutes = require('./routes/messageRoutes'); // Import the message routes
 const { generateAccessToken } = require("./controllers/authController");
 
 const port = process.env.PORT || 3001; // Use environment variable for port
@@ -104,6 +105,8 @@ app.use("/api/chefs", chefRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/users", userRoutes);
+app.use('/api/messages', messageRoutes); // Mount the message routes
+
 
 // Test route
 app.get("/", (req, res) => {

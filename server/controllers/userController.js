@@ -1,5 +1,6 @@
 // server/controllers/userController.js
 const User = require('../models/User'); // Import the User model
+const Message = require('../models/Message'); // Import the Message model
 const bcrypt = require('bcrypt');
 
 exports.getCurrentUser = async (req, res) => {
@@ -67,6 +68,28 @@ exports.changePassword = async (req, res) => {
     res.json({ message: 'Password changed successfully' });
   } catch (error) {
     console.error('Error changing password:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+exports.getMessages = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    console.log('Fetching messages for user:', req.user.userId);
+
+    // Add this line to get the bookingId from the query parameters
+    const bookingId = req.query.bookingId; 
+
+    // Fetch messages where the user is the sender and the booking matches the bookingId
+    const messages = await Message.find({ booking: bookingId })
+      .populate('sender')
+      .populate('booking');
+      console.log(messages)
+
+    res.json(messages);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
     res.status(500).json({ error: error.message });
   }
 };
