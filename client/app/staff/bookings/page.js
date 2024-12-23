@@ -92,17 +92,6 @@ export default function StaffBookings() {
   }, [availableOnly]);
 
 
-  useEffect(() => {
-    const fetchedSet = new Set(); // Create the Set inside useEffect
-    
-    bookings.forEach((booking) => {
-      if (!fetchedSet.has(booking._id)) {
-        fetchMessages(booking._id);
-      }
-    });
-  }, [bookings]); // Make sure bookings is in dependency array
-
-
     const fetchMessages = async (bookingId) => {
     if (fetchedBookings.has(bookingId)) {
       return; // Prevent fetching messages for the same booking repeatedly
@@ -140,7 +129,12 @@ export default function StaffBookings() {
       console.error("Error fetching messages:", error);
     }
   };
-  
+    // Add the useEffect hook here to call fetchMessages for each booking
+    useEffect(() => {
+      bookings.forEach((booking) => {
+        fetchMessages(booking._id);
+      });
+    }, [bookings]); 
 
   function isChefAvailableForBooking(bookingStart, bookingEnd, chefAvailability) {
     // Check if the chef has any availability entries that cover the entire booking period
