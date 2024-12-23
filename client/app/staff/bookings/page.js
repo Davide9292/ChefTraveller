@@ -89,6 +89,15 @@ export default function StaffBookings() {
     fetchBookings(); // Call fetchBookings to initiate the process
   }, [availableOnly]);
 
+
+  useEffect(() => {
+    // Fetch messages for each booking when the component mounts
+    bookings.forEach((booking) => {
+      fetchMessages(booking._id);
+    });
+  }, [bookings]); // Add bookings to the dependency array
+  
+
   function isChefAvailableForBooking(bookingStart, bookingEnd, chefAvailability) {
     // Check if the chef has any availability entries that cover the entire booking period
     return chefAvailability.some(availability => {
@@ -164,6 +173,7 @@ export default function StaffBookings() {
     }));
   };
 
+  
   const [messages, setMessages] = useState({}); // State to store messages for each booking
   const fetchedBookings = new Set(); // Keep track of fetched bookings
     
@@ -171,6 +181,7 @@ export default function StaffBookings() {
     if (fetchedBookings.has(bookingId)) {
       return; // Prevent fetching messages for the same booking repeatedly
     }
+    
   
     try {
       console.log('Fetching messages for booking:', bookingId); // Log the booking ID
