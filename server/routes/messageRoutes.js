@@ -5,6 +5,6 @@ const messageController = require('../controllers/messageController'); // You'll
 const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/', authMiddleware, messageController.sendMessage);
-router.get("/", authMiddleware, messageController.getMessages); // Add this line to define the GET route
+router.get('/', authMiddleware, messageController.getMessages); // Add this line to define the GET route
 
 module.exports = router;
