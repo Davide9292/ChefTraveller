@@ -335,16 +335,6 @@ export default function StaffBookings() {
                 </label>
               </div>
 
-              <h3>Messages</h3>
-              <ul>
-                {(messages[booking._id] || []).map((message) => (
-                  <li key={message._id}>
-                    <p>From: {message.sender.firstName} {message.sender.lastName}</p>
-                    <p>{message.content}</p>
-                  </li>
-                ))}
-              </ul>
-
               {/* Conditionally render chef selection or proposal summary */}
               {booking.status === "new request" ||
               booking.status === "additional request" ? (
@@ -471,6 +461,16 @@ export default function StaffBookings() {
                   Send Proposal
                 </button>
               )}
+
+              <h3>Messages</h3>
+              <ul>
+                {(messages[booking._id] || []).map((message) => (
+                  <li key={message._id}>
+                    <p>From: {message.sender.firstName} {message.sender.lastName}</p>
+                    <p>{message.content}</p>
+                  </li>
+                ))}
+              </ul>
 
               {/* Add buttons to update booking status */}
               {booking.status === "proposal sent" && (
