@@ -94,7 +94,7 @@ export default function StaffBookings() {
 
     const fetchMessages = async (bookingId) => {
     if (fetchedBookings.has(bookingId)) {
-      return; // Prevent fetching messages for the same booking repeatedly
+      return;
     }
 
     try {
@@ -112,6 +112,7 @@ export default function StaffBookings() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Received messages:", data);
         setMessages((prevMessages) => ({
           ...prevMessages,
           [bookingId]: data,
@@ -146,15 +147,15 @@ export default function StaffBookings() {
   }
 
 
-  {/* const handleChefSelection = (bookingId, chefId, isChecked) => {
-    setSelectedChefs((prevSelectedChefs) => ({
-      ...prevSelectedChefs,
-      [bookingId]: {
-        ...prevSelectedChefs[bookingId],
-        [chefId]: isChecked,
-        },
-      }));
-    }; */}
+    {/* const handleChefSelection = (bookingId, chefId, isChecked) => {
+        setSelectedChefs((prevSelectedChefs) => ({
+          ...prevSelectedChefs,
+          [bookingId]: {
+            ...prevSelectedChefs[bookingId],
+            [chefId]: isChecked,
+            },
+          }));
+        }; */}
 
   const handlePriceChange = (bookingId, chefId, price) => {
     setChefPrices((prevChefPrices) => ({
