@@ -164,6 +164,40 @@ export default function StaffBookings() {
     }));
   };
 
+  const [messages, setMessages] = useState({}); // State to store messages for each booking
+  const fetchedBookings = new Set(); // Keep track of fetched bookings
+    
+  const fetchMessages = async (bookingId) => {
+    if (fetchedBookings.has(bookingId)) {
+      return; // Prevent fetching messages for the same booking repeatedly
+    }
+  
+    try {
+      console.log('Fetching messages for booking:', bookingId); // Log the booking ID
+      const token = localStorage.getItem('token');
+      const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setMessages((prevMessages) => ({
+          ...prevMessages,
+          [bookingId]: data,
+        }));
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error('Error fetching messages:', errorData.error || response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
 
   const handleSendProposal = async (bookingId) => {
     if (confirm("Are you sure you want to send this proposal?")) {
@@ -215,39 +249,7 @@ export default function StaffBookings() {
     }
   };
 
-  const [messages, setMessages] = useState({}); // State to store messages for each booking
-  const fetchedBookings = new Set(); // Keep track of fetched bookings
-    
-  const fetchMessages = async (bookingId) => {
-    if (fetchedBookings.has(bookingId)) {
-      return; // Prevent fetching messages for the same booking repeatedly
-    }
-  
-    try {
-      console.log('Fetching messages for booking:', bookingId); // Log the booking ID
-      const token = localStorage.getItem('token');
-      const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: 'include',
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        setMessages((prevMessages) => ({
-          ...prevMessages,
-          [bookingId]: data,
-        }));
-      } else {
-        // Handle error
-        const errorData = await response.json();
-        console.error('Error fetching messages:', errorData.error || response.status);
-      }
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
-  };
+ 
 
   const handleBookingStatusChange = async (bookingId, status) => {
     try {
