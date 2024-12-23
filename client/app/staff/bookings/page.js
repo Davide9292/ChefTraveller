@@ -94,14 +94,13 @@ export default function StaffBookings() {
 
     const fetchMessages = async (bookingId) => {
     if (fetchedBookings.has(bookingId)) {
-      return;
+      return; // Prevent fetching messages for the same booking repeatedly
     }
 
     try {
       console.log("Fetching messages for booking:", bookingId);
       const token = localStorage.getItem("token");
-      const response = await fetchWithRefresh(
-        `/api/users/me/messages?bookingId=${bookingId}`,
+      const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

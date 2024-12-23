@@ -82,9 +82,10 @@ exports.getMessages = async (req, res) => {
     const bookingId = req.query.bookingId; 
 
     // Fetch messages where the user is the sender and the booking matches the bookingId
-    const messages = await Message.find({ sender: userId, booking: bookingId })
+    const messages = await Message.find({ booking: bookingId })
       .populate('sender')
       .populate('booking');
+      console.log(messages)
 
     res.json(messages);
   } catch (error) {
