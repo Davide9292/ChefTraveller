@@ -12,6 +12,7 @@ export default function StaffBookings() {
   const [availableOnly, setAvailableOnly] = useState(false);
   const [showChefDropdown, setShowChefDropdown] = useState({}); // State to control chef dropdowns
   const [messages, setMessages] = useState({}); // State to store messages for each booking
+  const fetchedBookings = new Set(); // Keep track of fetched bookings
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -100,6 +101,45 @@ export default function StaffBookings() {
       }
     });
   }, [bookings]); // Make sure bookings is in dependency array
+
+
+    const fetchMessages = async (bookingId) => {
+    if (fetchedBookings.has(bookingId)) {
+      return; // Prevent fetching messages for the same booking repeatedly
+    }
+
+    try {
+      console.log("Fetching messages for booking:", bookingId);
+      const token = localStorage.getItem("token");
+      const response = await fetchWithRefresh(
+        `/api/users/me/messages?bookingId=${bookingId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessages((prevMessages) => ({
+          ...prevMessages,
+          [bookingId]: data,
+        }));
+        fetchedBookings.add(bookingId);
+      } else {
+        // Handle error
+        const errorData = await response.json();
+        console.error(
+          "Error fetching messages:",
+          errorData.error || response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  };
   
 
   function isChefAvailableForBooking(bookingStart, bookingEnd, chefAvailability) {
@@ -175,41 +215,6 @@ export default function StaffBookings() {
         [chefIndex]: "",
       },
     }));
-  };
-
-  
-  const fetchedBookings = useState(new Set()); // Keep track of fetched bookings
-    
-  const fetchMessages = async (bookingId) => {
-    if (fetchedBookings.has(bookingId)) {
-      return;
-    }
-    fetchedBookings.add(bookingId); // Add the booking ID before fetching
-    
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Messages fetched for booking:', bookingId, data);
-        console.log('Messages received:', data); // Add this debug log
-        setMessages((prevMessages) => ({
-          ...prevMessages,
-          [bookingId]: data,
-        }));
-      } else {
-        const errorData = await response.json();
-        console.error('Error fetching messages:', errorData.error || response.status);
-      }
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
   };
 
 

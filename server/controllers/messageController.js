@@ -19,9 +19,9 @@ exports.sendMessage = async (req, res) => {
 exports.getMessages = async (req, res) => {
     try {
       const userId = req.user.userId;
+      console.log('Fetching messages for user:', req.user.userId);
   
-      // Fetch messages where the user is either the sender or the recipient
-      const messages = await Message.find({ $or: [{ sender: userId }, { recipient: userId }] })
+      const messages = await Message.find({ sender: userId })
         .populate('sender')
         .populate('booking');
   
