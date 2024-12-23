@@ -92,11 +92,14 @@ export default function StaffBookings() {
 
 
   useEffect(() => {
-    // Fetch messages for each booking when the component mounts
+    const fetchedSet = new Set(); // Create the Set inside useEffect
+    
     bookings.forEach((booking) => {
-      fetchMessages(booking._id);
+      if (!fetchedSet.has(booking._id)) {
+        fetchMessages(booking._id);
+      }
     });
-  }, [bookings]); // Add bookings to the dependency array
+  }, [bookings]); // Make sure bookings is in dependency array
   
 
   function isChefAvailableForBooking(bookingStart, bookingEnd, chefAvailability) {
@@ -179,10 +182,11 @@ export default function StaffBookings() {
     
   const fetchMessages = async (bookingId) => {
     if (fetchedBookings.has(bookingId)) {
-      return; // Prevent fetching messages for the same booking repeatedly
-    } 
+      return;
+    }
+    fetchedBookings.add(bookingId); // Add the booking ID before fetching
+    
     try {
-      console.log('Fetching messages for booking:', bookingId); // Log the booking ID
       const token = localStorage.getItem('token');
       const response = await fetchWithRefresh(`/api/users/me/messages?bookingId=${bookingId}`, {
         headers: {
@@ -190,15 +194,15 @@ export default function StaffBookings() {
         },
         credentials: 'include',
       });
-  
+
       if (response.ok) {
         const data = await response.json();
+        console.log('Messages received:', data); // Add this debug log
         setMessages((prevMessages) => ({
           ...prevMessages,
           [bookingId]: data,
         }));
       } else {
-        // Handle error
         const errorData = await response.json();
         console.error('Error fetching messages:', errorData.error || response.status);
       }
