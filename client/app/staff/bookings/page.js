@@ -509,6 +509,7 @@ export default function StaffBookings() {
                   </li>
                 ))}
               </ul>
+              
 
               {/* Add buttons to update booking status */}
               {booking.status === "proposal sent" && (
@@ -533,9 +534,16 @@ export default function StaffBookings() {
                   >
                     Reject Proposal
                   </button>
-                  <button onClick={() => handleDeleteBooking(booking._id)}>Delete</button> {/* Add Delete button */}
                 </div>
               )}
+                  <button 
+                    onClick={() => 
+                      handleDeleteBooking(
+                        booking._id
+                        )
+                      }>
+                    Delete
+                  </button> 
             </li>
           );
         })}
