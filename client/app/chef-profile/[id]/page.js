@@ -32,44 +32,6 @@ export default function ChefProfile({ params }) {
     fetchChef();
   }, [params.id]);
 
-  const handlePasswordChange = async (event) => {
-    event.preventDefault();
-
-    if (newPassword !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    try {
-      const response = await fetchWithRefresh(`/api/users/me/password`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
-
-      if (response.ok) {
-        // Password changed successfully
-        alert("Password changed successfully");
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-      } else {
-        const errorData = await response.json();
-        console.error(
-          "Error changing password:",
-          errorData.error || response.status
-        );
-        // Handle error, e.g., display an error message to the user
-      }
-    } catch (error) {
-      console.error("Error changing password:", error);
-    }
-  };
-
   const handleLocationChange = (event) => {
     setSelectedLocation(event.target.value);
   };
