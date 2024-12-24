@@ -298,6 +298,40 @@ export default function StaffBookings() {
     }
   };
 
+  const handleDeleteBooking = async (bookingId) => {
+    if (confirm('Are you sure you want to delete this booking?')) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetchWithRefresh(`/api/bookings/${bookingId}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: 'include',
+        });
+  
+        if (response.ok) {
+          // Booking deleted successfully
+          // Refresh the bookings data to reflect the changes
+          const response = await fetchWithRefresh('http://localhost:3001/api/bookings', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: 'include',
+          });
+          const data = await response.json();
+          setBookings(data);
+        } else {
+          // Handle error
+          const errorData = await response.json();
+          console.error('Error deleting booking:', errorData.error || response.status);
+        }
+      } catch (error) {
+        console.error('Error deleting booking:', error);
+      }
+    }
+  };
+
 
   return (
     <main className="bookings-container">
@@ -499,6 +533,7 @@ export default function StaffBookings() {
                   >
                     Reject Proposal
                   </button>
+                  <button onClick={() => handleDeleteBooking(booking._id)}>Delete</button> {/* Add Delete button */}
                 </div>
               )}
             </li>

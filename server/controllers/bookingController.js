@@ -169,3 +169,21 @@ exports.requestNewProposal = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.deleteBooking = async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    await booking.deleteOne();
+
+    res.json({ message: 'Booking deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    res.status(500).json({ error: error.message });
+  }
+};

@@ -11,5 +11,6 @@ router.get('/', staffAuthMiddleware, bookingController.getAllBookings); // Prote
 router.put('/:id/status', staffAuthMiddleware, bookingController.updateBookingStatus); // Add this route
 router.put('/:id', authMiddleware, bookingController.editBooking); // Add the editBooking route
 router.post('/:id/new-proposal', authMiddleware, bookingController.requestNewProposal); // Add this route
+router.delete('/:id', staffAuthMiddleware, bookingController.deleteBooking); // Add this route
 
 module.exports = router;
