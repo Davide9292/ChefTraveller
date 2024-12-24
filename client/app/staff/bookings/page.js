@@ -312,15 +312,8 @@ export default function StaffBookings() {
   
         if (response.ok) {
           // Booking deleted successfully
-          // Refresh the bookings data to reflect the changes
-          const response = await fetchWithRefresh('http://localhost:3001/api/bookings', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            credentials: 'include',
-          });
-          const data = await response.json();
-          setBookings(data);
+          // Update the bookings state to remove the deleted booking
+          setBookings(bookings.filter(booking => booking._id !== bookingId));
         } else {
           // Handle error
           const errorData = await response.json();
