@@ -230,6 +230,40 @@ export default function HostProfile() {
     }
   };
 
+  const handleDeleteBooking = async (bookingId) => {
+    if (confirm('Are you sure you want to delete this booking request?')) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetchWithRefresh(`/api/bookings/${bookingId}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: 'include',
+        });
+  
+        if (response.ok) {
+          // Booking deleted successfully
+          // Refresh the host data to reflect the changes
+          const response = await fetchWithRefresh('http://localhost:3001/api/users/me', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: 'include',
+          });
+          const data = await response.json();
+          setHostData(data);
+        } else {
+          // Handle error
+          const errorData = await response.json();
+          console.error('Error deleting booking:', errorData.error || response.status);
+        }
+      } catch (error) {
+        console.error('Error deleting booking:', error);
+      }
+    }
+  };
+
   return (
     <main className="profile-container">
       <h2>Welcome {hostData.firstName}!</h2>
@@ -408,6 +442,8 @@ export default function HostProfile() {
                     <a>Proceed to Checkout</a>
                   </Link>
                 )}
+                <button onClick={() => handleDeleteBooking(booking._id)}>Delete</button>
+
                 <button onClick={() => handleEditBooking(booking)}>
                   Edit
                 </button>
