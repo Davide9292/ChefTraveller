@@ -26,7 +26,7 @@ export default function ChefProfile({ params }) {
         <Image src={chef.profilePicture} alt={chef.firstName + ' ' + chef.lastName} />
         <h2>{chef.firstName} {chef.lastName}</h2>
         <p>{chef.biography}</p>
-        <p>Specialization: {chef.specialization}</p>
+        <h3>Availability</h3>
         {/* Add more details like availability, etc. */}
       </div>
     </main>
